@@ -31,13 +31,11 @@ const store = (req,res) => {
 const update = (req,res) => {
     const {name, price, stock, status} = req.body;
     const image = req.file;
-    const{id} = req.params
+    const {id} = req.params;
     if (image){
         const target = path.join(__dirname, '../../uploads', image.originalname);
         fs.renameSync(image.path, target);
-        db.collection('products').updateOne({name, price, stock, status, image_url:`http://localhost:4000/public/${image.originalname}`},
-        {_id: ObjectId(id)}
-        )
+        db.collection('products').updateOne({_id: ObjectId(id)}, {$set: {name, price, stock, status, image_url:`http://localhost:4000/public/${image.originalname}`}})
         .then(result => res.send(result))
         .catch(error => res.send(error));
     }  
